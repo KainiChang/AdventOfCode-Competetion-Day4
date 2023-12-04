@@ -7,16 +7,15 @@ public class Processor2
     public static long Process(string[] input)
     {
         // define an array to record the count of matches
-        int[] cardArray = new int[input.Length];
+        int[] countOfMatchForAllCards = new int[input.Length];
 
         for (int i = 0; i < input.Length; i++)
         {
-            string gameData = input[i].Substring(input[i].IndexOf(':') + 1).Trim(); // Extracting the game data part
-                                                                                    // Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
-                                                                                    // separate the game data into two int list by '|'
+            string gameData = input[i].Substring(input[i].IndexOf(':') + 1).Trim(); 
             var parts = gameData.Split('|');
             var firstPart = Regex.Split(parts[0].Trim(), @"\s+");
             var secondPart = Regex.Split(parts[1].Trim(), @"\s+");
+
             int count = 0;
             // if any element in secondPart is contained in the first part, count ++
             foreach (var item in secondPart)
@@ -27,34 +26,34 @@ public class Processor2
                 }
             }
 
-            cardArray[i] = count;
+            countOfMatchForAllCards[i] = count;
         }
-        long numberOfCards = CalculateTheNumberOfCards(cardArray);
+        long numberOfCards = GetNumberOfCards(countOfMatchForAllCards);
         return numberOfCards;
 
     }
 
-    public static long CalculateTheNumberOfCards(int[] cardArray)
+    public static long GetNumberOfCards(int[] countOfMatchForAllCards)
     {
         //create an array to record each number of card
-        int[] numberOfCards = new int[cardArray.Length];
-        // set each element to 1
+        int[] numberOfCards = new int[countOfMatchForAllCards.Length];
+        // number of each card is 1 orignally
         for (int i = 0; i < numberOfCards.Length; i++)
         {
             numberOfCards[i] = 1;
         }
 
-        // count of matches of i affect the following cards
-        for (int i = 0; i < cardArray.Length; i++)
+        for (int i = 0; i < countOfMatchForAllCards.Length; i++)
         {
-            for (int j = i + 1; j <= cardArray[i] + i; j++)
+            // count of matches of i determine how many following cards(j) being affected
+            for (int j = i + 1; j <= countOfMatchForAllCards[i] + i; j++)
             {
-                // number of i affect the addition of the following card's number
+                // number of the ith card affect how many times the following card being copied
                 numberOfCards[j] = numberOfCards[j] + numberOfCards[i];
             }
         }
         long sum = 0;
-        // sum elements in numberOfCards
+        // sum all numberOfCards
         for (int i = 0; i < numberOfCards.Length; i++)
         {
             sum = sum + numberOfCards[i];

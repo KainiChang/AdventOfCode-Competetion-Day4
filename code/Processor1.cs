@@ -13,6 +13,7 @@ public class Processor1
             var parts = gameData.Split('|');
             var firstPart = Regex.Split(parts[0].Trim(), @"\s+");
             var secondPart = Regex.Split(parts[1].Trim(), @"\s+");
+            
             int count = 0;
             // if any element in secondPart is contained in the first part, count ++
             foreach (var item in secondPart)
@@ -29,8 +30,5 @@ public class Processor1
         }
 
         return sum;
-
     }
-
-  
 }
